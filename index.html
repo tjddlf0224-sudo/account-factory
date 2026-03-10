@@ -899,14 +899,24 @@ function renderRankList(list) {
     const me=document.getElementById('player-name').value.trim().toUpperCase();
     box.innerHTML=list.map((r,i)=>{
         const medal=i===0?'🥇':i===1?'🥈':i===2?'🥉':(i+1)+'위';
+        const title=r.title||getTitle(r.score||0);   // ← 직급 (서버 or 로컬 계산)
         return `<div class="rank-row ${r.name===me?'rank-me':''}">
             <div class="rk-num ${i<3?'top':''}">${medal}</div>
-            <div class="rk-name">${r.name}</div>
+            <div class="rk-name">${r.name}<span style="font-size:0.72em;opacity:0.7;margin-left:6px;">${title}</span></div>
             <div class="rk-score">${(r.score||0).toLocaleString()}점</div>
             <div class="rk-date">${r.date||''}</div>
         </div>`;
     }).join('');
 }
+
+// 로컬 점수에도 직급 계산할 수 있도록 함수 추가 (HTML의 기존 rank 변수와 별개)
+function getTitle(score) {
+    if (score>=3000) return '🏭 전설의 공장장';
+    if (score>=1500) return '🔧 숙련된 조교';
+    if (score>=600)  return '💼 수습 사원';
+    return '👶 분개 초보';
+}
+    
 </script>
 </body>
 </html>
